@@ -25,9 +25,21 @@ StringProps getStringProps(std::string arg) {
   return props;
 }
 
+int sum_array(uintptr_t input, int length) {
+    const int* array = reinterpret_cast<int*>(input);
+
+    int total = 0;
+
+    for (int i = 0; i < length; i++) {
+        total += array[i];
+    }
+    return total;
+}
+
 EMSCRIPTEN_BINDINGS(my_module) {
     function("testFunc", &testFunc);
     function("returnObj", &getStringProps);
+    function("sum_array", &sum_array);
 
     value_object<StringProps>("StringProps")
         .field("arg", &StringProps::arg)
