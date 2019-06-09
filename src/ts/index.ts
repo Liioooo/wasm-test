@@ -1,24 +1,39 @@
+import {WasmFunctions} from "./wasm-functions";
 declare var Module;
 
 Module.onRuntimeInitialized = _ => {
-    console.log(returnObj('kekomat'));
-    console.log(sumArray([10, 4, 4, 20, 212]));
+    //console.log(returnObj('kekomat'));
+    //console.log(sumArray([10, 4, 4, 20, 212]));
+    //console.log(WasmFunctions.doubleArrayTyped(new Int32Array([1, 2, 3])));
+    //console.log(WasmFunctions.doubleArrayNormal([1, 2, 3]));
 };
 
-function returnObj(arg: string) {
-    let result = Module.returnObj(arg);
-    let chars: string[] = [];
-    for (let i = result.chars; i < result.chars + result.length; i++) {
-        chars.push(String.fromCharCode(Module.HEAP8[i]));
+document.getElementById('typed').addEventListener('click', () => {
+    for (let i = 0; i < 100; i++) {
+        callTyped();
     }
-    result.chars = chars;
-    return result;
+});
+
+document.getElementById('normal').addEventListener('click', () => {
+    for (let i = 0; i < 100; i++) {
+        callNormal();
+    }
+});
+
+function callNormal() {
+    const arr = [];
+    for (let i = 0; i < 200; i++) {
+        arr.push(Math.round(Math.random()*1000));
+    }
+    WasmFunctions.doubleArrayNormal(arr)
+    //console.log(WasmFunctions.doubleArrayNormal(arr));
 }
 
-function sumArray(arr: number[]): number {
-    const typedArray = new Int32Array(arr);
-    const buffer = Module._malloc(typedArray.length * typedArray.BYTES_PER_ELEMENT);
-    Module.HEAP32.set(typedArray, buffer >> 2);
-    const result = Module.sum_array(buffer, arr.length);
-    return result;
+function callTyped() {
+    const arr = new Int32Array(200);
+    for (let i = 0; i < arr.length; i++) {
+        arr[i] = Math.round(Math.random()*1000);
+    }
+    WasmFunctions.doubleArrayTyped(arr)
+    //console.log(WasmFunctions.doubleArrayTyped(arr));
 }

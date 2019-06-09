@@ -1,5 +1,6 @@
 #include <emscripten/bind.h>
 #include <string>
+#include <iostream>
 
 using namespace emscripten;
 
@@ -36,10 +37,20 @@ int sum_array(uintptr_t input, int length) {
     return total;
 }
 
+uintptr_t double_array(uintptr_t input, int length) {
+    int* array = reinterpret_cast<int*>(input);
+
+    for (int i = 0; i < length; i++) {
+        array[i] = array[i] * 2;
+    }
+    return reinterpret_cast<std::uintptr_t>(&array[0]);
+}
+
 EMSCRIPTEN_BINDINGS(my_module) {
     function("testFunc", &testFunc);
     function("returnObj", &getStringProps);
     function("sum_array", &sum_array);
+    function("double_array", &double_array);
 
     value_object<StringProps>("StringProps")
         .field("arg", &StringProps::arg)

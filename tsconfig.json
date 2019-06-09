@@ -3,7 +3,8 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "target": "es6",
-    "sourceMap": true
+    "sourceMap": true,
+    "experimentalDecorators": true
   },
   "exclude": [
     "node_modules"
