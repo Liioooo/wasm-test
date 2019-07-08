@@ -37,3 +37,21 @@ function callTyped() {
     WasmFunctions.doubleArrayTyped(arr)
     //console.log(WasmFunctions.doubleArrayTyped(arr));
 }
+
+const worker = new Worker('assets/worker.js');
+
+worker.addEventListener('message', (e) => {
+   console.log(e);
+});
+
+document.getElementById('start').addEventListener('click', () => {
+    worker.postMessage('start');
+});
+
+document.getElementById('getStatus').addEventListener('click', () => {
+    worker.postMessage('getStatus');
+});
+
+document.getElementById('stop').addEventListener('click', () => {
+    worker.postMessage('stop');
+});
