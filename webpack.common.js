@@ -53,7 +53,17 @@ module.exports = {
             filename: "styles.[hash].css"
         }),
         new CopyWebpackPlugin([
-            {from:'assets',to:'assets'}
+            {
+                from:'assets',
+                to:'assets',
+                transform(content, path) {
+                    if(path.endsWith('wasm/wasm.js') || path.endsWith('wasm\\wasm.js')) {
+                        console.log(content);
+                        return content.toString().replace('wasm.wasm', 'wasm/wasm.wasm');
+                    }
+                    return content;
+                }
+            },
         ]),
         new ProgressBarPlugin()
     ],
